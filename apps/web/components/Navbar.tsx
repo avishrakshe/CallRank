@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wallet, Zap } from "lucide-react";
+import { ConnectWallet } from "./ConnectWallet";
 import { AudioCuesToggle } from "./AudioCuesToggle";
 
 export function Navbar() {
   const pathname = usePathname();
-  const [walletConnected, setWalletConnected] = useState(false);
 
   const navLinks = [
     { href: "/markets", label: "Markets" },
@@ -50,7 +50,7 @@ export function Navbar() {
         </nav>
       </div>
 
-      {/* Network Indicator, Audio Toggle & Wallet CTA */}
+      {/* Network Indicator, Audio Toggle & Real ConnectWallet Component */}
       <div className="flex items-center space-x-3">
         <div className="hidden lg:flex items-center space-x-2 px-2.5 py-1 rounded-[2px] bg-surface-raised border border-border text-xs font-mono">
           <span className="w-1.5 h-1.5 rounded-full bg-up animate-pulse" />
@@ -59,17 +59,7 @@ export function Navbar() {
 
         <AudioCuesToggle />
 
-        {/* Single primary CTA on right */}
-        <button
-          onClick={() => setWalletConnected(!walletConnected)}
-          className={`px-3.5 py-1.5 rounded-[2px] text-xs font-mono font-semibold transition-all ${
-            walletConnected
-              ? "bg-surface-raised text-text border border-border hover:bg-surface"
-              : "bg-accent hover:bg-accent-hover text-bg shadow-sm"
-          }`}
-        >
-          {walletConnected ? "0x71C...B9a4 (4.5 STT)" : "Connect wallet"}
-        </button>
+        <ConnectWallet />
       </div>
     </header>
   );

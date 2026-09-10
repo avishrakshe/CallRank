@@ -22,6 +22,13 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
+  const activeCandleRef = useRef<{
+    time: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+  } | null>(null);
 
   const [timeframe, setTimeframe] = useState<"1m" | "5m" | "15m" | "1h">("1m");
   const [chartType, setChartType] = useState<"candlestick" | "line">("candlestick");
@@ -52,6 +59,7 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
       },
       rightPriceScale: {
         borderColor: "#202635",
+        autoScale: true,
         scaleMargins: {
           top: 0.1,
           bottom: 0.1,
@@ -70,24 +78,40 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
         : timeframe === "15m"
         ? 900
         : 3600;
-    const basePrice = asset === "BTC" ? 88450 : 2710;
-    const volatility = asset === "BTC" ? 24 : 3.2;
+    const volatility = asset === "BTC" ? 22 : 3.0;
 
+    // Generate historical candles ending precisely at currentPrice to prevent price/header drift
     const candleData: CandlestickData[] = [];
     const lineData: LineData[] = [];
-    let prevClose = basePrice - 40 * (volatility * 0.2);
 
-    for (let i = 45; i >= 1; i--) {
-      const time = (nowSec - i * step) as any;
-      const open = prevClose;
-      const change = (Math.random() - 0.48) * volatility;
-      const close = +(open + change).toFixed(2);
-      const high = +(Math.max(open, close) + Math.random() * (volatility * 0.4)).toFixed(2);
-      const low = +(Math.min(open, close) - Math.random() * (volatility * 0.4)).toFixed(2);
+    // Work backwards from currentPrice to ensure zero gap
+    const prices: number[] = [currentPrice];
+    for (let i = 1; i <= 45; i++) {
+      const prev = prices[0] - (Math.random() - 0.49) * volatility;
+      prices.unshift(+prev.toFixed(2));
+    }
+
+    for (let i = 0; i < 45; i++) {
+      const time = (nowSec - (45 - i) * step) as any;
+      const open = prices[i];
+      const close = prices[i + 1] ?? open;
+      const high = +(Math.max(open, close) + Math.random() * (volatility * 0.35)).toFixed(2);
+      const low = +(Math.min(open, close) - Math.random() * (volatility * 0.35)).toFixed(2);
 
       candleData.push({ time, open, high, low, close });
       lineData.push({ time, value: close });
-      prevClose = close;
+    }
+
+    // Set current active candle reference
+    const latestBar = candleData[candleData.length - 1];
+    if (latestBar) {
+      activeCandleRef.current = {
+        time: latestBar.time as number,
+        open: latestBar.open,
+        high: latestBar.high,
+        low: latestBar.low,
+        close: latestBar.close,
+      };
     }
 
     if (chartType === "candlestick") {
@@ -133,7 +157,7 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
     };
   }, [asset, timeframe, chartType]);
 
-  // Update current tick
+  // Unified single-source-of-truth live candle updates
   useEffect(() => {
     const nowSec = Math.floor(Date.now() / 1000);
     const step =
@@ -144,25 +168,42 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
         : timeframe === "15m"
         ? 900
         : 3600;
-    const candleTime = (nowSec - (nowSec % step)) as any;
+    const currentBarTime = (nowSec - (nowSec % step)) as any;
 
     try {
-      if (candleSeriesRef.current) {
+      if (activeCandleRef.current) {
+        if (activeCandleRef.current.time === currentBarTime) {
+          activeCandleRef.current.high = Math.max(activeCandleRef.current.high, currentPrice);
+          activeCandleRef.current.low = Math.min(activeCandleRef.current.low, currentPrice);
+          activeCandleRef.current.close = currentPrice;
+        } else {
+          // New candle period started
+          activeCandleRef.current = {
+            time: currentBarTime,
+            open: currentPrice,
+            high: currentPrice,
+            low: currentPrice,
+            close: currentPrice,
+          };
+        }
+      }
+
+      if (candleSeriesRef.current && activeCandleRef.current) {
         candleSeriesRef.current.update({
-          time: candleTime,
-          open: currentPrice,
-          high: +(currentPrice + Math.random() * 2.0).toFixed(2),
-          low: +(currentPrice - Math.random() * 2.0).toFixed(2),
-          close: currentPrice,
+          time: activeCandleRef.current.time as any,
+          open: activeCandleRef.current.open,
+          high: activeCandleRef.current.high,
+          low: activeCandleRef.current.low,
+          close: activeCandleRef.current.close,
         });
       } else if (lineSeriesRef.current) {
         lineSeriesRef.current.update({
-          time: candleTime,
+          time: currentBarTime,
           value: currentPrice,
         });
       }
     } catch {
-      // Ignore time boundary race
+      // Time boundary sync
     }
   }, [currentPrice, timeframe]);
 
@@ -210,7 +251,7 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
                 onClick={() => setTimeframe(tf)}
                 className={`px-2.5 py-1 rounded-[2px] transition-colors ${
                   timeframe === tf
-                    ? "bg-surface text-text font-bold border border-accent/40 text-accent"
+                    ? "bg-surface text-accent font-bold border border-accent/40"
                     : "text-text-muted hover:text-text"
                 }`}
               >
@@ -255,7 +296,7 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
 
       {/* Chart Sub-Bar / Footnote */}
       <div className="flex items-center justify-between text-[11px] font-mono text-text-muted pt-1 border-t border-border">
-        <span>TradingView Lightweight-Charts · Real-Time Ticks</span>
+        <span>TradingView Lightweight-Charts · Single Source of Truth</span>
         <span className="text-accent flex items-center space-x-1">
           <Sparkles className="w-3 h-3" />
           <span>Somnia Shannon Testnet (50312)</span>

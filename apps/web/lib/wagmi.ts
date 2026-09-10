@@ -1,4 +1,4 @@
-import { http, createConfig } from "wagmi";
+import { http, createConfig, injected } from "wagmi";
 import { defineChain } from "viem";
 
 export const somniaShannon = defineChain({
@@ -19,15 +19,20 @@ export const somniaShannon = defineChain({
   },
   blockExplorers: {
     default: {
-      name: "Somnia Shannon Explorer",
+      name: "Shannon Explorer",
       url: "https://shannon-explorer.somnia.network",
     },
   },
 });
 
-export const wagmiConfig = createConfig({
+export const config = createConfig({
   chains: [somniaShannon],
+  connectors: [
+    injected(),
+  ],
   transports: {
     [somniaShannon.id]: http("https://dream-rpc.somnia.network"),
   },
 });
+
+export const wagmiConfig = config;

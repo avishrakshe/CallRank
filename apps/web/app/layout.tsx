@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Providers } from "@/lib/providers";
 
 export const metadata: Metadata = {
   title: "CallRank — The Leaderboard for Verifiable Market Calls",
@@ -25,9 +26,11 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-bg text-text min-h-screen flex flex-col antialiased selection:bg-accent selection:text-bg">
-        <Navbar />
-        <main className="flex-1 flex flex-col">{children}</main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="flex-1 flex flex-col">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
