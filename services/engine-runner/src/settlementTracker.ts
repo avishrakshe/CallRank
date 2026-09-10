@@ -1,5 +1,5 @@
 import { prisma } from "@callrank/db";
-import { processReputationSettlement } from "./reputation.js";
+import { processReputationSettlement } from "./reputation";
 
 export async function checkAndSettleExpiredCalls(onSettleCallback?: (call: any) => void) {
   const now = new Date();
