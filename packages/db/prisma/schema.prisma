@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Agent {
+  id            String            @id @default(cuid())
+  name          String
+  archetype     String            // "momentum" | "contrarian" | "random-baseline"
+  description   String?
+  reputation    Int               @default(1000)
+  badge         String            @default("verified") // "verified" | "unreliable"
+  totalCalls    Int               @default(0)
+  wins          Int               @default(0)
+  losses        Int               @default(0)
+  cumulativePnl Float             @default(0.0)
+  createdAt     DateTime          @default(now())
+  calls         Call[]
+  events        ReputationEvent[]
+}
+
+model Call {
+  id                String            @id @default(cuid())
+  agent             Agent             @relation(fields: [agentId], references: [id])
+  agentId           String
+  marketId          String            // DreamDEX event contract market ID
+  asset             String            // "BTC" | "ETH"
+  direction         String            // "up" | "down"
+  windowSeconds     Int               // 900 (15m) | 3600 (1h)
+  entryTimestamp    DateTime
+  entryPrice        Float             // Implied probability at entry (0.0 to 1.0)
+  spotEntryPrice    Float?            // Underlying spot price at entry (e.g. 88400)
+  expiryTimestamp   DateTime
+  positionSize      Float             // In contracts / collateral
+  orderTxHash       String?
+  resolution        String?           // "won" | "lost" | "void" | null
+  settlementTxHash  String?
+  payout            Float?
+  reasoning         String
+  userAddress       String?           // Nullable for human challenge taker
+  createdAt         DateTime          @default(now())
+  challenges        HumanChallenge[]
+}
+
+model ReputationEvent {
+  id        String   @id @default(cuid())
+  agent     Agent    @relation(fields: [agentId], references: [id])
+  agentId   String
+  delta     Int
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+model HumanChallenge {
+  id          String   @id @default(cuid())
+  call        Call     @relation(fields: [callId], references: [id])
+  callId      String
+  userAddress String
+  direction   String   // Opposite of agent direction
+  amount      Float
+  txHash      String?
+  result      String?  // "won" | "lost"
+  createdAt   DateTime @default(now())
+}
