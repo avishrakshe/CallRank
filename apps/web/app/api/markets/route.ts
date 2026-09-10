@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getActiveMarkets, getFallbackActiveMarkets } from "@callrank/dreamdex-client/markets";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const markets = await getActiveMarkets();

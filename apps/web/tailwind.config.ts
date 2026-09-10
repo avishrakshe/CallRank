@@ -10,6 +10,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Section 3c Terminal Tokens
+        bg: "#0A0E14",
+        surface: "#12161F",
+        "surface-raised": "#181D28",
+        accent: {
+          DEFAULT: "#F2B84B",
+          hover: "#E5A937",
+        },
+        border: "#202635",
+        text: {
+          DEFAULT: "#EDEFF3",
+          muted: "#7C8496",
+        },
+        // Finnova Light & Dark Console Tokens
         canvas: "#EEF0F5",
         card: "#FFFFFF",
         "card-border": "#E5E7EB",
@@ -30,8 +44,8 @@ const config: Config = {
           frosted: "rgba(255, 255, 255, 0.12)",
           frostedBorder: "rgba(255, 255, 255, 0.18)",
         },
-        up: "#10B981",
-        down: "#F43F5E",
+        up: "#2DD4BF",
+        down: "#FF6B6B",
       },
       fontFamily: {
         sans: ["Plus Jakarta Sans", "General Sans", "-apple-system", "sans-serif"],

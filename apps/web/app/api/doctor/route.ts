@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { publicClient } from "@callrank/dreamdex-client/markets";
 import { DEPLOYMENTS } from "@callrank/dreamdex-client/addresses";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const chainId = await publicClient.getChainId();
