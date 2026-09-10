@@ -5,89 +5,80 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --bg: #0A0E14;
-    --surface: #12161F;
-    --surface-raised: #181D28;
-    --accent: #F2B84B;
-    --up: #2DD4BF;
-    --down: #FF6B6B;
-    --text: #EDEFF3;
-    --text-muted: #7C8496;
-  }
-
   body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: "Plus Jakarta Sans", "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: #EEF0F5;
+    color: #111827;
+    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Monospace figures always use tabular alignment */
   .font-mono, .tabular-nums {
     font-family: "IBM Plex Mono", monospace;
     font-variant-numeric: tabular-nums;
   }
 }
 
-/* Precision scrollbar for trading terminal */
+/* Custom sleek scrollbars */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0E14;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #181D28;
-  border-radius: 2px;
+  background: #CBD5E1;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #7C8496;
+  background: #94A3B8;
 }
 
-/* Sharp instrument-panel styling (2px-4px radius, not soft rounded cards) */
-.terminal-panel {
-  background-color: #12161F;
-  border: 1px solid rgba(124, 132, 150, 0.18);
-  border-radius: 4px;
+/* Light Card Style matching Finnova */
+.finnova-card {
+  background: #FFFFFF;
+  border: 1px solid #EAECEF;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px -2px rgba(19, 22, 34, 0.04), 0 2px 6px -1px rgba(19, 22, 34, 0.02);
 }
 
-.terminal-panel-raised {
-  background-color: #181D28;
-  border: 1px solid rgba(124, 132, 150, 0.28);
-  border-radius: 4px;
+/* Dark Bottom Console */
+.finnova-console {
+  background: #131622;
+  border-radius: 24px;
+  color: #FFFFFF;
+  box-shadow: 0 20px 40px -10px rgba(19, 22, 34, 0.2);
 }
 
-.terminal-panel-accent {
-  background-color: #12161F;
-  border: 1px solid rgba(242, 184, 75, 0.4);
-  border-radius: 4px;
+/* Frosted Master-Detail Featured Card */
+.finnova-detail-card {
+  background: linear-gradient(135deg, #4447DB 0%, #3033B4 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
 }
 
-/* Background grid styling */
-.terminal-grid {
-  background-size: 20px 20px;
-  background-image: 
-    linear-gradient(to right, rgba(124, 132, 150, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(124, 132, 150, 0.03) 1px, transparent 1px);
+.finnova-frosted-stat {
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
 }
 
-/* Prefers reduced motion overrides */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  ::before,
-  ::after {
-    animation-delay: -1ms !important;
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    background-attachment: initial !important;
-    scroll-behavior: auto !important;
-    transition-delay: 0s !important;
-    transition-duration: 0s !important;
-  }
+/* Pill Tabs */
+.finnova-nav-pill {
+  background: #131622;
+  border-radius: 9999px;
+  padding: 4px;
+  color: #9CA3AF;
+}
+
+.finnova-nav-active {
+  background: #4B49E9;
+  color: #FFFFFF;
+  border-radius: 9999px;
 }

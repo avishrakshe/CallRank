@@ -10,52 +10,42 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "#0A0E14",
-        surface: "#12161F",
-        "surface-raised": "#181D28",
-        accent: {
-          DEFAULT: "#F2B84B",
-          hover: "#DE9F35",
-          glow: "rgba(242, 184, 75, 0.2)",
+        canvas: "#EEF0F5",
+        card: "#FFFFFF",
+        "card-border": "#E5E7EB",
+        primary: {
+          DEFAULT: "#4B49E9",
+          hover: "#3B39D4",
+          light: "#EEF0FF",
         },
-        up: {
-          DEFAULT: "#2DD4BF",
-          hover: "#14B8A6",
-          glow: "rgba(45, 212, 191, 0.2)",
+        navy: {
+          DEFAULT: "#131622",
+          surface: "#1A1E2E",
+          card: "#23283D",
+          border: "rgba(255, 255, 255, 0.08)",
         },
-        down: {
-          DEFAULT: "#FF6B6B",
-          hover: "#FA5252",
-          glow: "rgba(255, 107, 107, 0.2)",
+        indigoCard: {
+          from: "#4144D4",
+          to: "#2E31AE",
+          frosted: "rgba(255, 255, 255, 0.12)",
+          frostedBorder: "rgba(255, 255, 255, 0.18)",
         },
-        text: {
-          DEFAULT: "#EDEFF3",
-          muted: "#7C8496",
-        },
-        border: "rgba(124, 132, 150, 0.18)",
-        "border-active": "rgba(242, 184, 75, 0.35)",
+        up: "#10B981",
+        down: "#F43F5E",
       },
       fontFamily: {
-        sans: ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "General Sans", "-apple-system", "sans-serif"],
         mono: ["IBM Plex Mono", "monospace"],
       },
       borderRadius: {
-        DEFAULT: "2px",
-        none: "0",
-        sm: "2px",
-        md: "3px",
-        lg: "4px",
-        panel: "4px",
+        "3xl": "28px",
+        "2xl": "20px",
+        xl: "14px",
       },
-      animation: {
-        "pulse-fast": "pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        marquee: "marquee 28s linear infinite",
-      },
-      keyframes: {
-        marquee: {
-          "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-50%)" },
-        },
+      boxShadow: {
+        card: "0 4px 20px -2px rgba(19, 22, 34, 0.04), 0 2px 6px -1px rgba(19, 22, 34, 0.02)",
+        subtle: "0 1px 3px rgba(0, 0, 0, 0.05)",
+        console: "0 20px 40px -10px rgba(19, 22, 34, 0.15)",
       },
     },
   },

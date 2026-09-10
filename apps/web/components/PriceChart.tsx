@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart, IChartApi, ISeriesApi, CandlestickData, ColorType } from "lightweight-charts";
 import { AssetSymbol } from "@callrank/dreamdex-client/types";
+import { TrendingUp } from "lucide-react";
 
 interface PriceChartProps {
   asset: AssetSymbol;
@@ -18,45 +19,44 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
-    // Initialize Lightweight Chart with Section 3c color palette
+    // Clean modern chart matching Finnova aesthetic
     const chart = createChart(chartContainerRef.current, {
       layout: {
-        background: { type: ColorType.Solid, color: "#12161F" },
-        textColor: "#7C8496",
+        background: { type: ColorType.Solid, color: "#FFFFFF" },
+        textColor: "#6B7280",
         fontSize: 12,
         fontFamily: "'IBM Plex Mono', monospace",
       },
       grid: {
-        vertLines: { color: "rgba(124, 132, 150, 0.08)" },
-        horzLines: { color: "rgba(124, 132, 150, 0.08)" },
+        vertLines: { color: "#F3F4F6" },
+        horzLines: { color: "#F3F4F6" },
       },
       crosshair: {
-        vertLine: { color: "#F2B84B", width: 1, style: 3 },
-        horzLine: { color: "#F2B84B", width: 1, style: 3 },
+        vertLine: { color: "#4B49E9", width: 1, style: 3 },
+        horzLine: { color: "#4B49E9", width: 1, style: 3 },
       },
       timeScale: {
-        borderColor: "rgba(124, 132, 150, 0.18)",
+        borderColor: "#E5E7EB",
         timeVisible: true,
         secondsVisible: true,
       },
       rightPriceScale: {
-        borderColor: "rgba(124, 132, 150, 0.18)",
+        borderColor: "#E5E7EB",
         scaleMargins: {
           top: 0.1,
           bottom: 0.1,
         },
       },
       width: chartContainerRef.current.clientWidth,
-      height: 400,
+      height: 340,
     });
 
-    // Functional Up/Down colors from Section 3c: #2DD4BF (up) and #FF6B6B (down)
     const series = chart.addCandlestickSeries({
-      upColor: "#2DD4BF",
-      downColor: "#FF6B6B",
+      upColor: "#10B981",
+      downColor: "#EF4444",
       borderVisible: false,
-      wickUpColor: "#2DD4BF",
-      wickDownColor: "#FF6B6B",
+      wickUpColor: "#10B981",
+      wickDownColor: "#EF4444",
     });
 
     const nowSec = Math.floor(Date.now() / 1000);
@@ -116,57 +116,62 @@ export function PriceChart({ asset, currentPrice }: PriceChartProps) {
         close: currentPrice,
       });
     } catch {
-      // Time boundary catch
+      // Time boundary
     }
   }, [currentPrice, timeframe]);
 
   return (
-    <div className="terminal-panel p-4 flex flex-col h-full">
+    <div className="finnova-card p-5 flex flex-col h-full">
       {/* Chart Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-border mb-3">
+      <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-3">
         <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <TrendingUp className="w-5 h-5" />
+          </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-semibold text-lg text-text">{asset}/USD</span>
-              <span className="text-[11px] px-1.5 py-0.5 rounded-[2px] bg-surface-raised text-text-muted border border-border">
-                Live oracle
+              <span className="font-bold text-lg text-gray-900">{asset}/USD Spot Feed</span>
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 font-medium border border-emerald-200">
+                Live Oracle
               </span>
             </div>
-            <div className="text-xs text-text-muted">Somnia Shannon testnet price feed</div>
+            <div className="text-xs text-gray-500">DreamDEX Fixed-Window Reference Price</div>
           </div>
         </div>
 
         {/* Current Live Price Display */}
-        <div className="text-right">
-          <div className="text-2xl font-mono font-bold text-text tabular-nums tracking-tight">
-            ${currentPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        <div className="flex items-center space-x-4">
+          <div className="text-right">
+            <div className="text-2xl font-mono font-bold text-gray-900 tabular-nums tracking-tight">
+              ${currentPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+            <div className="text-xs text-emerald-600 font-mono font-medium flex items-center justify-end space-x-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>+1.42% 24h</span>
+            </div>
           </div>
-          <div className="text-xs text-up font-mono flex items-center justify-end space-x-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-up animate-pulse" />
-            <span>+1.42% 24h</span>
-          </div>
-        </div>
 
-        {/* Timeframe Buttons */}
-        <div className="flex items-center space-x-1 bg-surface-raised p-0.5 rounded-[2px] border border-border text-xs">
-          {(["1m", "5m", "15m"] as const).map((tf) => (
-            <button
-              key={tf}
-              onClick={() => setTimeframe(tf)}
-              className={`px-2.5 py-1 rounded-[2px] font-mono transition-all ${
-                timeframe === tf
-                  ? "bg-surface text-text font-semibold shadow-sm"
-                  : "text-text-muted hover:text-text"
-              }`}
-            >
-              {tf}
-            </button>
-          ))}
+          {/* Timeframe Buttons */}
+          <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-xl text-xs font-medium">
+            {(["1m", "5m", "15m"] as const).map((tf) => (
+              <button
+                key={tf}
+                onClick={() => setTimeframe(tf)}
+                className={`px-3 py-1 rounded-lg transition-all ${
+                  timeframe === tf
+                    ? "bg-white text-gray-900 font-semibold shadow-subtle"
+                    : "text-gray-500 hover:text-gray-900"
+                }`}
+              >
+                {tf}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Candlestick Chart Area */}
-      <div ref={chartContainerRef} className="w-full flex-1 min-h-[380px] relative" />
+      <div ref={chartContainerRef} className="w-full flex-1 min-h-[340px] relative" />
     </div>
   );
 }
