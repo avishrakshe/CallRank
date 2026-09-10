@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { CallItem, AgentRanking } from "@callrank/dreamdex-client/types";
-import { ShieldCheck, AlertTriangle, ArrowUpRight, ArrowDownRight, Swords, BrainCircuit, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AgentCardProps {
@@ -29,99 +28,86 @@ export function AgentCard({ call, ranking, onChallenge, onSelectProof }: AgentCa
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className={`glass-panel rounded-xl p-4 border transition-all duration-300 relative overflow-hidden ${
-        isUp ? "hover:border-emerald-500/50" : "hover:border-rose-500/50"
-      }`}
+      transition={{ type: "spring", stiffness: 350, damping: 28 }}
+      className="terminal-panel p-3.5 transition-all duration-200"
     >
-      {/* Top Header: Agent Profile + Badge */}
-      <div className="flex items-center justify-between pb-3 border-b border-border/70">
-        <div className="flex items-center space-x-2.5">
-          {/* Pulsing Status Dot */}
-          <span className="relative flex h-3 w-3">
+      {/* Top Header: Agent Profile + Pulse Indicator + Reputation Badge */}
+      <div className="flex items-center justify-between pb-2.5 border-b border-border">
+        <div className="flex items-center space-x-2">
+          {/* Agent Pulse Indicator: pulses while position is open */}
+          <span className="relative flex h-2.5 w-2.5">
             <span
               className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                isUp ? "bg-emerald-400" : "bg-rose-400"
+                isUp ? "bg-up" : "bg-down"
               }`}
-            ></span>
+            />
             <span
-              className={`relative inline-flex rounded-full h-3 w-3 ${
-                isUp ? "bg-emerald-500" : "bg-rose-500"
+              className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+                isUp ? "bg-up" : "bg-down"
               }`}
-            ></span>
+            />
           </span>
 
           <div>
-            <h4 className="font-bold text-sm text-white tracking-wide">{call.agentName}</h4>
-            <span className="text-[11px] text-slate-400 font-mono capitalize">{call.agentArchetype}</span>
+            <h4 className="font-semibold text-xs text-text">{call.agentName}</h4>
+            <span className="text-[11px] text-text-muted capitalize">{call.agentArchetype}</span>
           </div>
         </div>
 
-        {/* Reputation Badge Flip */}
-        <div className="flex items-center space-x-1.5">
-          <motion.div
-            key={badge}
-            initial={{ rotateY: 90 }}
-            animate={{ rotateY: 0 }}
-            transition={{ duration: 0.4 }}
-            className={`flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-mono font-semibold border ${
-              badge === "verified"
-                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                : "bg-rose-500/10 text-rose-400 border-rose-500/30"
-            }`}
-          >
-            {badge === "verified" ? (
-              <ShieldCheck className="w-3.5 h-3.5" />
-            ) : (
-              <AlertTriangle className="w-3.5 h-3.5" />
-            )}
-            <span>{reputation} REP</span>
-          </motion.div>
-        </div>
+        {/* Reputation Badge: Amber accent spent here */}
+        <motion.div
+          key={badge}
+          initial={{ rotateY: 90 }}
+          animate={{ rotateY: 0 }}
+          transition={{ duration: 0.3 }}
+          className={`flex items-center space-x-1 px-1.5 py-0.5 rounded-[2px] text-[11px] font-mono border ${
+            badge === "verified"
+              ? "bg-accent/10 text-accent border-accent/30"
+              : "bg-surface-raised text-text-muted border-border"
+          }`}
+        >
+          <span>{badge}</span>
+          <span className="text-text-muted">({reputation})</span>
+        </motion.div>
       </div>
 
       {/* Main Position Details */}
-      <div className="py-3 flex items-center justify-between">
+      <div className="py-2.5 flex items-center justify-between">
         <div>
-          <div className="text-xs text-slate-400 uppercase font-mono">Market Call</div>
-          <div className="flex items-center space-x-1.5 mt-0.5">
-            <span className="font-extrabold text-lg text-white font-mono">{call.asset}</span>
-            <div
-              className={`flex items-center px-2 py-0.5 rounded text-xs font-bold font-mono uppercase ${
+          <div className="text-[11px] text-text-muted">Market call</div>
+          <div className="flex items-center space-x-2 mt-0.5">
+            <span className="font-bold text-sm text-text font-mono">{call.asset}</span>
+            <span
+              className={`px-1.5 py-0.5 rounded-[2px] text-xs font-mono font-semibold uppercase ${
                 isUp
-                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                  : "bg-rose-500/20 text-rose-300 border border-rose-500/40"
+                  ? "bg-up/10 text-up border border-up/30"
+                  : "bg-down/10 text-down border border-down/30"
               }`}
             >
-              {isUp ? <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" /> : <ArrowDownRight className="w-3.5 h-3.5 mr-0.5" />}
               {call.direction}
-            </div>
+            </span>
           </div>
         </div>
 
-        <div className="text-right font-mono">
-          <div className="text-xs text-slate-400">Entry Probability</div>
-          <div className="text-base font-bold text-white tracking-tight">{(call.entryPrice * 100).toFixed(1)}%</div>
-          <div className="text-[11px] text-slate-400 font-medium">{call.positionSize} Contracts</div>
+        <div className="text-right font-mono tabular-nums">
+          <div className="text-[11px] text-text-muted">Entry probability</div>
+          <div className="text-sm font-bold text-text">{(call.entryPrice * 100).toFixed(1)}%</div>
+          <div className="text-[10px] text-text-muted">{call.positionSize} contracts</div>
         </div>
       </div>
 
-      {/* Agent Reasoning Snippet */}
-      <div className="bg-surface-raised/60 p-2.5 rounded-lg border border-border/70 text-xs mb-3">
-        <div className="flex items-center justify-between text-slate-400 mb-1">
-          <span className="flex items-center gap-1 font-semibold text-[11px] text-primary">
-            <BrainCircuit className="w-3 h-3" /> Deterministic Thesis
-          </span>
+      {/* Agent Stated Reasoning */}
+      <div className="bg-surface-raised p-2 rounded-[2px] border border-border text-xs mb-2.5">
+        <div className="flex items-center justify-between text-text-muted mb-1 text-[11px]">
+          <span>Stated thesis</span>
           <button
             onClick={() => setShowReasoning(!showReasoning)}
-            className="text-[10px] text-slate-400 hover:text-white underline font-mono"
+            className="text-[10px] text-text-muted hover:text-text underline font-mono"
           >
             {showReasoning ? "collapse" : "view full"}
           </button>
         </div>
-        <p className="text-slate-300 font-sans leading-relaxed line-clamp-2">
+        <p className="text-text leading-relaxed text-xs line-clamp-2">
           {call.reasoning}
         </p>
 
@@ -131,47 +117,39 @@ export function AgentCard({ call, ranking, onChallenge, onSelectProof }: AgentCa
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-2 pt-2 border-t border-border/70 text-slate-400 font-mono text-[11px] space-y-1"
+              className="mt-2 pt-2 border-t border-border text-text-muted font-mono text-[11px] space-y-1"
             >
-              <div>Tx Hash: <span className="text-accent">{call.orderTxHash}</span></div>
-              <div>Window: 15 Minutes (Fixed expiry)</div>
+              <div>Order tx: <span className="text-text">{call.orderTxHash}</span></div>
+              <div>Window: 15 minutes</div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Bottom Action Strip: Human Challenge & Proof Link */}
-      <div className="flex items-center space-x-2 pt-1">
+      {/* Action Strip: Functional Microcopy ("Take the other side", "Audit proof") */}
+      <div className="flex items-center space-x-2">
         <button
           onClick={handleChallenge}
           disabled={challenged}
-          className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold font-mono flex items-center justify-center space-x-1.5 transition-all ${
+          className={`flex-1 py-1.5 px-2.5 rounded-[2px] text-xs font-mono font-medium transition-all ${
             challenged
-              ? "bg-surface-raised text-slate-400 border border-border cursor-not-allowed"
+              ? "bg-surface-raised text-text-muted border border-border cursor-not-allowed"
               : isUp
-              ? "bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500/30"
-              : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-500/30"
+              ? "bg-down/10 text-down border border-down/40 hover:bg-down/20"
+              : "bg-up/10 text-up border border-up/40 hover:bg-up/20"
           }`}
         >
-          {challenged ? (
-            <>
-              <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
-              <span>Challenged ({isUp ? "DOWN" : "UP"})</span>
-            </>
-          ) : (
-            <>
-              <Swords className="w-3.5 h-3.5" />
-              <span>Challenge ({isUp ? "Take DOWN" : "Take UP"})</span>
-            </>
-          )}
+          {challenged
+            ? `Taking other side (${isUp ? "down" : "up"})`
+            : `Take the other side (${isUp ? "down" : "up"})`}
         </button>
 
         {onSelectProof && (
           <button
             onClick={() => onSelectProof(call)}
-            className="py-2 px-3 rounded-lg bg-surface-raised hover:bg-surface-raised/80 border border-border text-xs font-mono text-slate-300 hover:text-white"
+            className="py-1.5 px-2.5 rounded-[2px] bg-surface-raised hover:bg-surface border border-border text-xs font-mono text-text-muted hover:text-text transition-colors"
           >
-            Audit Proof
+            Audit proof
           </button>
         )}
       </div>

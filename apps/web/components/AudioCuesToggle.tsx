@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Volume2, VolumeX } from "lucide-react";
-import { toggleAudio, isAudioEnabled } from "@/lib/audio";
+import { toggleAudio } from "@/lib/audio";
 
 export function AudioCuesToggle() {
   const [enabled, setEnabled] = useState(true);
@@ -16,19 +15,10 @@ export function AudioCuesToggle() {
     <button
       onClick={handleToggle}
       title={enabled ? "Mute audio cues" : "Unmute settlement audio cues"}
-      className="p-2 rounded-lg bg-surface-raised hover:bg-surface-raised/80 border border-border text-slate-300 hover:text-white transition-colors flex items-center space-x-1.5 text-xs font-mono"
+      className="py-1 px-2.5 rounded-[2px] bg-surface-raised hover:bg-surface border border-border text-text-muted hover:text-text transition-colors flex items-center space-x-1.5 text-xs font-mono"
     >
-      {enabled ? (
-        <>
-          <Volume2 className="w-4 h-4 text-emerald-400" />
-          <span className="hidden md:inline text-[11px]">Audio On</span>
-        </>
-      ) : (
-        <>
-          <VolumeX className="w-4 h-4 text-slate-500" />
-          <span className="hidden md:inline text-[11px]">Muted</span>
-        </>
-      )}
+      <span className={`w-1.5 h-1.5 rounded-full ${enabled ? "bg-up" : "bg-text-muted"}`} />
+      <span>{enabled ? "Audio on" : "Muted"}</span>
     </button>
   );
 }

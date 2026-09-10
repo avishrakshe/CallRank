@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Clock } from "lucide-react";
 
 interface CountdownRingProps {
   targetTimestamp: number; // Unix timestamp in ms
@@ -13,8 +12,8 @@ interface CountdownRingProps {
 export function CountdownRing({
   targetTimestamp,
   totalDurationSeconds,
-  label = "15m Window",
-  size = 110,
+  label = "15m window",
+  size = 96,
 }: CountdownRingProps) {
   const [secondsRemaining, setSecondsRemaining] = useState<number>(0);
 
@@ -32,7 +31,7 @@ export function CountdownRing({
     return () => cancelAnimationFrame(animFrameId);
   }, [targetTimestamp]);
 
-  const strokeWidth = 8;
+  const strokeWidth = 6;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
@@ -44,13 +43,11 @@ export function CountdownRing({
   const seconds = secondsRemaining % 60;
   const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
-  // Color transitions as expiry approaches
   const isUrgent = secondsRemaining < 120; // under 2 mins
-  const ringColor = isUrgent ? "#f43f5e" : "#6366f1";
-  const glowColor = isUrgent ? "rgba(244, 63, 94, 0.4)" : "rgba(99, 102, 241, 0.35)";
+  const ringColor = isUrgent ? "#FF6B6B" : "#2DD4BF";
 
   return (
-    <div className="flex flex-col items-center justify-center p-3 rounded-xl glass-panel border border-border">
+    <div className="terminal-panel p-3 flex flex-col items-center justify-center">
       <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="rotate-[-90deg]">
           {/* Background track */}
@@ -58,7 +55,7 @@ export function CountdownRing({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="rgba(30, 44, 77, 0.7)"
+            stroke="rgba(124, 132, 150, 0.15)"
             strokeWidth={strokeWidth}
             fill="transparent"
           />
@@ -75,23 +72,21 @@ export function CountdownRing({
             fill="transparent"
             style={{
               transition: "stroke-dashoffset 0.1s linear, stroke 0.3s ease",
-              filter: `drop-shadow(0 0 6px ${glowColor})`,
             }}
           />
         </svg>
 
         {/* Center time readout */}
         <div className="absolute flex flex-col items-center justify-center text-center">
-          <Clock className={`w-3.5 h-3.5 mb-0.5 ${isUrgent ? "text-rose-400 animate-pulse" : "text-primary"}`} />
-          <span className="font-mono font-bold text-base text-white tracking-tight leading-none">
+          <span className="font-mono font-bold text-base text-text tabular-nums leading-none">
             {formattedTime}
           </span>
-          <span className="text-[10px] text-slate-400 font-medium uppercase mt-0.5">TTL</span>
+          <span className="text-[10px] text-text-muted uppercase mt-0.5 font-mono">left</span>
         </div>
       </div>
 
-      <span className="text-xs font-semibold text-slate-300 mt-2 text-center tracking-wide">{label}</span>
-      <span className="text-[10px] text-slate-500 font-mono">Settles On-Chain</span>
+      <span className="text-xs font-medium text-text mt-2 text-center">{label}</span>
+      <span className="text-[10px] text-text-muted font-mono">Settles on chain</span>
     </div>
   );
 }

@@ -10,30 +10,46 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#090d16",
-        surface: "#0f1626",
-        "surface-raised": "#151f36",
-        border: "#1e2c4d",
-        primary: {
-          DEFAULT: "#6366f1",
-          hover: "#4f46e5",
-          glow: "rgba(99, 102, 241, 0.25)",
+        bg: "#0A0E14",
+        surface: "#12161F",
+        "surface-raised": "#181D28",
+        accent: {
+          DEFAULT: "#F2B84B",
+          hover: "#DE9F35",
+          glow: "rgba(242, 184, 75, 0.2)",
         },
         up: {
-          DEFAULT: "#10b981",
-          hover: "#059669",
-          glow: "rgba(16, 185, 129, 0.2)",
+          DEFAULT: "#2DD4BF",
+          hover: "#14B8A6",
+          glow: "rgba(45, 212, 191, 0.2)",
         },
         down: {
-          DEFAULT: "#f43f5e",
-          hover: "#e11d48",
-          glow: "rgba(244, 63, 94, 0.2)",
+          DEFAULT: "#FF6B6B",
+          hover: "#FA5252",
+          glow: "rgba(255, 107, 107, 0.2)",
         },
-        accent: "#38bdf8",
+        text: {
+          DEFAULT: "#EDEFF3",
+          muted: "#7C8496",
+        },
+        border: "rgba(124, 132, 150, 0.18)",
+        "border-active": "rgba(242, 184, 75, 0.35)",
+      },
+      fontFamily: {
+        sans: ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        mono: ["IBM Plex Mono", "monospace"],
+      },
+      borderRadius: {
+        DEFAULT: "2px",
+        none: "0",
+        sm: "2px",
+        md: "3px",
+        lg: "4px",
+        panel: "4px",
       },
       animation: {
         "pulse-fast": "pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "marquee": "marquee 25s linear infinite",
+        marquee: "marquee 28s linear infinite",
       },
       keyframes: {
         marquee: {

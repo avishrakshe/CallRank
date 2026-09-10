@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Radio, Zap } from "lucide-react";
 
 interface ActivityItem {
   id: string;
@@ -16,36 +15,31 @@ interface LiveActivityTickerProps {
 
 export function LiveActivityTicker({ activities }: LiveActivityTickerProps) {
   return (
-    <div className="w-full bg-surface-raised/90 border-y border-border py-2 px-4 flex items-center overflow-hidden shadow-inner">
-      {/* Ticker Header Tag */}
-      <div className="flex items-center space-x-2 pr-4 border-r border-border shrink-0 z-10 bg-surface-raised/90">
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
-        <span className="text-xs font-mono font-bold tracking-wider text-slate-300 flex items-center gap-1">
-          <Zap className="w-3.5 h-3.5 text-primary" /> LIVE STREAM
-        </span>
+    <div className="w-full bg-surface border-y border-border py-1.5 px-4 flex items-center overflow-hidden">
+      {/* Ticker Lead Tag */}
+      <div className="flex items-center space-x-2 pr-3 border-r border-border shrink-0 z-10 bg-surface">
+        <span className="w-2 h-2 rounded-full bg-up animate-pulse" />
+        <span className="text-[11px] font-mono text-text-muted">Live feed</span>
       </div>
 
       {/* Marquee ticker content */}
-      <div className="flex-1 overflow-hidden whitespace-nowrap pl-4 relative">
-        <div className="inline-flex space-x-8 animate-marquee">
+      <div className="flex-1 overflow-hidden whitespace-nowrap pl-3 relative">
+        <div className="inline-flex space-x-6 animate-marquee">
           {activities.concat(activities).map((act, idx) => (
             <div key={`${act.id}-${idx}`} className="inline-flex items-center space-x-2 text-xs font-mono">
               <span
-                className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
+                className={`px-1 py-0.2 rounded-[2px] text-[10px] uppercase font-mono ${
                   act.category === "settlement"
-                    ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                    ? "bg-surface-raised text-accent border border-border"
                     : act.category === "agent"
-                    ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
-                    : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                    ? "bg-surface-raised text-up border border-border"
+                    : "bg-surface-raised text-text-muted border border-border"
                 }`}
               >
                 {act.category}
               </span>
-              <span className="text-slate-200">{act.message}</span>
-              <span className="text-slate-500 text-[11px]">·</span>
+              <span className="text-text">{act.message}</span>
+              <span className="text-border px-1">/</span>
             </div>
           ))}
         </div>
