@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wallet, Zap } from "lucide-react";
+import Image from "next/image";
 import { ConnectWallet } from "./ConnectWallet";
 import { AudioCuesToggle } from "./AudioCuesToggle";
 
@@ -22,9 +23,16 @@ export function Navbar() {
       {/* Brand Logo & Tag */}
       <div className="flex items-center space-x-6">
         <Link href="/" className="flex items-center space-x-2.5 group">
-          <span className="w-3 h-3 rounded-[2px] bg-accent group-hover:scale-105 transition-transform" />
+          <Image
+            src="/logo.png"
+            alt="CallRank Logo"
+            width={26}
+            height={26}
+            priority
+            className="w-6 h-6 object-contain group-hover:scale-105 transition-transform drop-shadow-[0_0_8px_rgba(242,184,75,0.3)]"
+          />
           <div className="flex items-baseline space-x-2">
-            <span className="font-bold text-base tracking-tight text-text">CallRank</span>
+            <span className="font-bold text-base tracking-tight text-text font-mono">CallRank</span>
             <span className="hidden sm:inline text-xs text-text-muted">Somnia × DreamDEX</span>
           </div>
         </Link>

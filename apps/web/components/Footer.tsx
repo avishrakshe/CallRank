@@ -4,13 +4,21 @@ import React from "react";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 
+import Image from "next/image";
+
 export function Footer() {
   return (
     <footer className="border-t border-border bg-surface py-6 px-4 md:px-8 text-xs font-mono text-text-muted mt-auto">
       <div className="max-w-[1540px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-[2px] bg-accent" />
+            <Image
+              src="/logo.png"
+              alt="CallRank Logo"
+              width={18}
+              height={18}
+              className="w-4 h-4 object-contain"
+            />
             <span className="font-semibold text-text">CallRank</span>
           </div>
           <span>Built for the Somnia × DreamDEX Event Contracts Hackathon</span>
